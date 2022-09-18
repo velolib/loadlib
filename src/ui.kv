@@ -1,0 +1,285 @@
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+
+<LinkCard>
+    md_bg_color: app.theme_cls.primary_color
+    radius: dp(25)
+    MDScreen:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: 1, None
+        MDBoxLayout:
+            padding: [20, 20, 20, 20]
+            spacing: dp(20)
+
+            AsyncImage:
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                source: root.logo
+                size_hint: None, None
+                size: dp(36), dp(36)
+
+            MDLabel:
+                text: root.linktext
+                font_name: app.font
+                font_style: 'H6'
+                halign: 'left'
+                markup: True
+
+            MDIconButton:
+                icon: 'open-in-new'
+                icon_size: dp(24)
+                size_hint: None, 0.75
+                width: self.height
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                md_bg_color: 0, 0, 0, 1
+                on_release: root.open_url()
+                icon_color: app.theme_cls.primary_color
+                theme_icon_color: 'Custom'
+
+            MDIconButton:
+                icon: 'close'
+                icon_size: dp(24)
+                size_hint: None, 0.75
+                width: self.height
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                md_bg_color: 0, 0, 0, 1
+                on_release: root.delete()
+                icon_color: app.theme_cls.primary_color
+                theme_icon_color: 'Custom'
+                ripple_alpha: 0
+
+<LinkView>
+    viewclass: 'LinkCard'
+    RecycleBoxLayout:
+        id: rbl
+        spacing: dp(10)
+        padding: dp(10)
+        default_size: None, dp(50)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+
+<LinkBox>
+    hint_text: 'Enter website URL'
+    hint_text_color_normal: app.theme_cls.primary_color
+    hint_text_color_focus: app.theme_cls.primary_color
+    text_color_normal: app.theme_cls.primary_color
+    text_color_focus: app.theme_cls.primary_color
+    line_color_normal: app.theme_cls.primary_color
+    line_color_focus: app.theme_cls.primary_color
+
+    helper_text: 'Invalid URL'
+    helper_text_mode: 'on_error'
+    mode: 'line'
+    multiline: True
+    font_name: app.font
+
+<NavBar>
+    title: 'Loadlib'
+    size_hint: 1, None
+    height: dp(100)
+    elevation: 4
+    pos_hint: {'top': 1}
+    md_bg_color: app.theme_cls.primary_color
+    specific_text_color: 0, 0, 0, 1
+    left_action_items:
+        [['menu', lambda x: app.root.ids.nav_drawer.set_state('open')]]
+
+<LoadingLayout>
+    name: 'loading'
+    MDSpinner:
+        size_hint: None, None
+        size: dp(128), dp(128)
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        active: True
+
+<MainScreen>
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        NavBar:
+
+
+        AnchorLayout:
+            size_hint: 1, 1
+            anchor_x: 'center'
+            anchor_y: 'center'
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(20)
+                spacing: dp(25)
+
+                MDBoxLayout:
+                    id: firstbox
+                    size_hint: 1, 1
+                    spacing: dp(25)
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                    MDAnchorLayout:
+                        anchor_y: 'top'
+                        size_hint: None, 1
+                        width: dp(128)
+
+                        MDCard:
+                            md_bg_color: 1, 1, 1, 0.01
+                            size_hint: None, None
+                            width: dp(90)
+                            height: dp(180)
+                            spacing: dp(10)
+                            padding: [10, 10, 10, 10]
+                            orientation: 'vertical'
+                            radius: dp(25)
+
+                            MDIconButton:
+                                id: download
+                                icon: 'download'
+                                icon_size: dp(48)
+                                theme_icon_color: 'Custom'
+                                icon_color: 0, 0, 0, 1
+                                disabled_color: 0, 0, 0, 1
+
+                                size_hint: None, 0.5
+                                width: self.height
+                                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                                theme_icon_color: 'Custom'
+                                md_bg_color: app.theme_cls.primary_color
+                                md_bg_color_disabled: app.theme_cls.primary_dark
+
+                                disabled: True
+
+                            MDIconButton:
+                                id: folder
+                                icon: 'folder-outline'
+                                icon_size: dp(48)
+                                theme_icon_color: 'Custom'
+                                icon_color: 0, 0, 0, 1
+                                disabled_color: 0, 0, 0, 1
+
+                                size_hint: None, 0.5
+                                width: self.height
+                                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                                theme_icon_color: 'Custom'
+                                md_bg_color: app.theme_cls.primary_color
+                                md_bg_color_disabled: app.theme_cls.primary_dark
+
+                                on_release: root.file_manager_open()
+                                disabled: False
+                    
+                    MDCard:
+                        radius: dp(25)
+                        padding: dp(10)
+                        md_bg_color: 1, 1, 1, 0.01
+                        size_hint: 1, 1
+
+                        LinkView:
+                            id: fv
+
+
+
+
+                MDCard:
+                    size_hint: 1, None
+                    height: dp(85)
+                    md_bg_color: 1, 1, 1, 0.01
+                    spacing: dp(25)
+                    padding: dp(10)
+                    radius: dp(25)
+
+                    MDIconButton:
+                        icon: 'autorenew'
+                        icon_size: dp(48)
+                        theme_icon_color: 'Custom'
+                        icon_color: 0, 0, 0, 1
+                        disabled_color: 0, 0, 0, 1
+
+                        width: self.height
+                        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                        theme_icon_color: 'Custom'
+                        md_bg_color: app.theme_cls.primary_color
+                        md_bg_color_disabled: app.theme_cls.primary_dark
+                        on_press: root.text_reset()
+                        size_hint: None, 1
+                        width: self.height
+                    MDScrollView:
+                        size_hint: 1, 1
+                        do_scroll_x: False
+                        effect_cls: 'ScrollEffect'
+                        LinkBox:
+                            id: fb
+                    MDIconButton:
+                        icon: 'plus'
+                        icon_size: dp(48)
+                        theme_icon_color: 'Custom'
+                        icon_color: 0, 0, 0, 1
+                        disabled_color: 0, 0, 0, 1
+
+                        width: self.height
+                        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                        theme_icon_color: 'Custom'
+                        md_bg_color: app.theme_cls.primary_color
+                        md_bg_color_disabled: app.theme_cls.primary_dark
+                        on_press: root.text_button()
+
+                        size_hint: None, 1
+                        width: self.height
+
+
+
+<RootScreenManager>:
+    id: root_screen_manager
+    transition: RiseInTransition()
+
+    MDScreen:
+        name: 'root_screen'
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+                id: screen_manager
+
+                MainScreen:
+                    id: main_screen
+                    name: 'download'
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (dp(0), dp(16), dp(16), dp(0))
+
+                MDNavigationDrawerMenu:
+                    
+                    MDNavigationDrawerHeader:
+                        title: 'Menu'
+                        spacing: dp(4)
+                        padding: dp(12), 0, 0, dp(18)
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerItem:
+                        icon: 'download'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Download'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release: root.switch_screen('download')
+
+                    MDNavigationDrawerItem:
+                        icon: 'cog'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Settings'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release: root.switch_screen('download')
+                    
+                    MDNavigationDrawerItem:
+                        icon: 'information-outline'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Acknowledgements'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release: root.switch_screen('download')

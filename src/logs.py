@@ -6,4 +6,4 @@ import os
 os.environ['KIVY_NO_FILELOG'] = '1'
 
 Jou = Logger
-Jou.setLevel(LOG_LEVELS['debug'])
+Jou.setLevel(LOG_LEVELS['info'])
