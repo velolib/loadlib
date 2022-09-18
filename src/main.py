@@ -33,20 +33,15 @@ from functools import partial
 import multiprocessing
 multiprocessing.freeze_support()
 
-
-# Dependencies
-try:
-    from src.validator import Validator
-except:
-    from validator import Validator
-
 # Local imports
 try:  # run from root
     from src.consts import ALLOWED, LOADLIB
     from src.download import tempo, Downloader, Found, Downloader_inst
-except:  # run from main
+    from src.validator import Validator
+except ImportError:  # run from main
     from consts import ALLOWED, LOADLIB
     from download import tempo, Downloader, Found, Downloader_inst
+    from validator import Validator
 
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Loader.loading_image = str((LOADLIB / 'assets' / 'loading').with_suffix('.png'))
@@ -148,7 +143,7 @@ class MainScreen(MDScreen):
             dictdata.append(data_props)
 
         if any(x in dictdata for x in self.ids.fv.data):
-            raise Exception(f'URL already exists')
+            raise Exception('URL already exists')
 
         self.ids.fv.data = dictdata + self.ids.fv.data
         self.ids.fv.refresh_from_data()
@@ -223,7 +218,7 @@ class MainApp(MDApp):  # type: ignore
 
         try:
             kv = Builder.load_file('ui.kv')
-        except:
+        except Exception:
             Builder.unload_file('ui.kv')
             kv = Builder.load_file('src/ui.kv')
 
@@ -244,7 +239,7 @@ class MainApp(MDApp):  # type: ignore
 
     def start(self):
         Downloader_inst.start(*[x['puretext'] for x in self.root.ids.main_screen.ids.fv.data],  # type: ignore
-                            out=self.root.ids.main_screen.path, callme=None)  # type: ignore
+                              out=self.root.ids.main_screen.path, callme=None)  # type: ignore
 
     def thread(self, func):
         func()

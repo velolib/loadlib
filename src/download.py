@@ -24,7 +24,7 @@ from typing import Callable  # type hints
 try:  # run from root
     from src.consts import LOADLIB, ALLOWED, config_get, LOADLONG  # constants
     from src.logs import Jou  # logs
-except:  # run from main
+except ImportError:  # run from main
     from consts import LOADLIB, ALLOWED, config_get, LOADLONG  # constants
     from logs import Jou  # logs
 
@@ -38,7 +38,7 @@ class Worker(mp.Process):
     """Worker class for multiprocessing"""
 
     def __init__(self, task_queue):
-        super(Worker, self).__init__()
+        super().__init__()
         self.task_queue = task_queue
 
     def run(self):
@@ -103,42 +103,41 @@ class Downloader():
                     for l in v:
                         if l in url:
                             if '//' not in url:
-                                url = '%s%s' % (LOADLONG, 'http://', url)
+                                url = f'http://{url}'
                             dict_q[func].append(url)
                             raise Found
                 raise ValueError(f'Invalid URL: {url}')
             except Found:
-                pass
-        else:
-            MAX_PROC = mp.cpu_count() - 1
-            start = perf_counter()
-            Jou.info('%s Running with %s processes' % (LOADLONG, MAX_PROC,))
+                continue
+        MAX_PROC = mp.cpu_count() - 1
+        start = perf_counter()
+        Jou.info(f'{LOADLONG} Running with {MAX_PROC} processes')  # last
 
-            workers = []
-            manager = mp.Manager()
-            task_queue = manager.Queue()
+        workers = []
+        manager = mp.Manager()
+        task_queue = manager.Queue()
 
-            for i in range(MAX_PROC):
-                worker = Worker(task_queue)
-                workers.append(worker)
-                worker.start()
+        for _ in range(MAX_PROC):
+            worker = Worker(task_queue)
+            workers.append(worker)
+            worker.start()
 
-            for func, v in dict_q.items():
-                for argument in v:
-                    task_queue.put((getattr(self, func), out, argument, task_queue))
+        for func, v in dict_q.items():
+            for argument in v:
+                task_queue.put((getattr(self, func), out, argument, task_queue))
 
-            task_queue.join()
+        task_queue.join()
 
-            for _ in workers:
-                task_queue.put(None)
+        for _ in workers:
+            task_queue.put(None)
 
-            for worker in workers:
-                worker.join()
+        for worker in workers:
+            worker.join()
 
-            Jou.info('%s Queue has been processed in %s seconds' % (LOADLONG, (perf_counter() - start),))
+        Jou.info('%s Queue has been processed in %s seconds' % (LOADLONG, (perf_counter() - start),))
 
-            if callme:
-                callme()
+        if callme:
+            callme()
 
     @classmethod
     def sp_album(cls, out: str, playlist: str, queue, *args):
@@ -220,7 +219,10 @@ class Downloader():
             Jou.info('%s Finished downloading song %s' % (LOADLONG, metadata['track_name'],))
 
             # Cover art processing (probably broken)
-            cover_data = rq.get(metadata['cover']).content
+            cover_data = rq.get(metadata['cover'], timeout=20).content
+            if not cover_data:
+                raise Exception('Failed to download cover data')
+
             with open(str((tempo / pid).with_suffix('.jpeg')), 'wb') as handler:
                 handler.write(cover_data)
 
@@ -241,7 +243,7 @@ class Downloader():
                 .get_args()
             )
             with subprocess.Popen(['ffmpeg'] + ffargs_1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
-                opu, err = spr.communicate()
+                pass
 
             # Process 2: MP3 -> MP3 + Metadata
             ffargs_2 = "ffmpeg -i " + '"' + str(audio_input) + '"'
@@ -261,11 +263,11 @@ class Downloader():
                 + '"' + str(output_path) + '"'
             )
             with subprocess.Popen(ffargs_2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
-                opu, err = spr.communicate()
+                pass
 
             Jou.info('%s Finished processing song %s' % (LOADLONG, metadata['track_name'],))
 
-        except Exception as e:
+        except Exception:
             Jou.error('%s Skipped downloading song %s' % (LOADLONG, song,))
         finally:
             for ext in ['.webm', '.jpeg', '.mp3', '.jpeg']:
@@ -301,7 +303,7 @@ class Downloader():
                 if name:
                     stream.download(out, (name + '.webm'))  # type: ignore
                 else:
-                    stream.download(out, (self.sanitize(yt.title) + '.mp4'))  # type: ignore
+                    stream.download(out, (cls.sanitize(yt.title) + '.mp4'))  # type: ignore
             else:
                 stream_vid = yt.streams.filter(adaptive=True, file_extension='mp4',
                                                res='1080p').order_by('fps').desc().first()
@@ -332,11 +334,7 @@ class Downloader():
 
                 Jou.info('%s Processing yt_video %s' % (LOADLONG, yt.title,))
                 with subprocess.Popen(ffargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
-                    opu, err = spr.communicate()
-
-                    # if spr.stdout:
-                    #     for line in spr.stdout: # type: ignore
-                    #         Jou.debug('%s {line}')
+                    pass
 
             Jou.info('%s Finished processing yt_video %s' % (LOADLONG, yt.title,))
         except Exception as e:

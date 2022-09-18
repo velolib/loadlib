@@ -1,7 +1,7 @@
 import io
 try:  # run from root
     from src.logs import Jou
-except:  # run from main
+except ImportError:  # run from main
     from logs import Jou
 import os
 import pathlib as ptl
@@ -52,7 +52,7 @@ if not os.path.exists(CONFIG_PATH):
         Jou.info('%s')
         yaml.dump(STANDARD_CONFIG, ymfile, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
-with open(CONFIG_PATH) as config:
+with open(CONFIG_PATH, encoding='UTF-8') as config:
     CONFIG_DATA = yaml.safe_load(config)
 
 
@@ -67,5 +67,4 @@ def config_get(key_path: list[str] | None = None) -> str:
     """
     if key_path:
         return reduce(getitem, key_path, CONFIG_DATA)
-    else:
-        return CONFIG_DATA
+    return CONFIG_DATA
