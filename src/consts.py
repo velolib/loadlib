@@ -50,7 +50,8 @@ LOADLONG = '[Loadlib     ]'
 if not os.path.exists(CONFIG_PATH):
     with io.open(CONFIG_PATH, 'w', encoding='UTF-8') as ymfile:
         Jou.info('%s')
-        yaml.dump(STANDARD_CONFIG, ymfile, default_flow_style=False, allow_unicode=True, sort_keys=False)
+        yaml.dump(STANDARD_CONFIG, ymfile, default_flow_style=False,
+                  allow_unicode=True, sort_keys=False)
 
 with open(CONFIG_PATH, encoding='UTF-8') as config:
     CONFIG_DATA = yaml.safe_load(config)

@@ -3,7 +3,6 @@ if __name__ == "__main__":
     multiprocessing.freeze_support()
     import sys
 
-
     def test_connection():
         import requests
         res = requests.get("http://www.google.com", timeout=10)

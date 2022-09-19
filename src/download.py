@@ -111,7 +111,8 @@ class Downloader():
                 continue
         MAX_PROC = mp.cpu_count() - 1
         start = perf_counter()
-        Jou.info(f'{LOADLONG} Running with {MAX_PROC} processes')  # last
+        Jou.info(f'{LOADLONG} Running with {MAX_PROC} processes'
+                 )  # last
 
         workers = []
         manager = mp.Manager()
@@ -287,7 +288,7 @@ class Downloader():
         Jou.info('%s Added yt_playlist %s to queue' % (LOADLONG, pl.title,))
 
     @classmethod
-    def yt_video(cls, out: str, url: str, *args, name: str = '', sp: bool = False):
+    def yt_video(cls, out: str, url: str, *args, name: str = '', sp: bool =False):
         """Processes youtube videos into .webm
 
         Args:

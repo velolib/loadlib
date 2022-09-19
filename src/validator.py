@@ -24,12 +24,14 @@ class Validator():
             # Step 1: urlparse
             method_1 = urlparse(url)
             if not all([method_1.scheme, method_1.netloc]):
-                raise Exception(f'Exception when testing {url}, using Method 1')
+                raise Exception(
+                    f'Exception when testing {url}, using Method 1')
 
             # Step 2: validators
             method_2 = vld.url(url)  # type: ignore
             if not method_2:
-                raise Exception(f'Exception when testing {url}, using Method 2')
+                raise Exception(
+                    f'Exception when testing {url}, using Method 2')
 
             # Step 3: Allowed list
             for key, dom in (tuple([key, domain]) for key, domainlist in ALLOWED.items() for domain in domainlist):
