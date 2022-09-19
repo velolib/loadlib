@@ -242,7 +242,7 @@ class Downloader():
                 .overwrite_output()
                 .get_args()
             )
-            with subprocess.Popen(['ffmpeg'] + ffargs_1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
+            with subprocess.Popen(['ffmpeg'] + ffargs_1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True):
                 pass
 
             # Process 2: MP3 -> MP3 + Metadata
@@ -262,7 +262,7 @@ class Downloader():
                 + ' -b:a 320k -vn -y '
                 + '"' + str(output_path) + '"'
             )
-            with subprocess.Popen(ffargs_2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
+            with subprocess.Popen(ffargs_2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True):
                 pass
 
             Jou.info('%s Finished processing song %s' % (LOADLONG, metadata['track_name'],))
@@ -333,7 +333,7 @@ class Downloader():
                           + '"')
 
                 Jou.info('%s Processing yt_video %s' % (LOADLONG, yt.title,))
-                with subprocess.Popen(ffargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) as spr:
+                with subprocess.Popen(ffargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True):
                     pass
 
             Jou.info('%s Finished processing yt_video %s' % (LOADLONG, yt.title,))
