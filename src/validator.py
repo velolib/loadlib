@@ -38,52 +38,35 @@ class Validator():
                 if dom in url:
                     match key:
                         case 'yt_video':
-                            try:
-                                if YouTube(url):
-                                    return
-                                else:
-                                    raise PytubeError
-                            except PytubeError:
-                                pass
+                            if YouTube(url):
+                                continue
+                            else:
+                                raise PytubeError
                         case 'yt_playlist':
-                            try:
-                                if Playlist(url):
-                                    return
-                                else:
-                                    raise PytubeError
-                            except PytubeError:
-                                pass
+                            if Playlist(url):
+                                continue
+                            else:
+                                raise PytubeError
                         case 'sp_song':
-                            try:
-                                if SPOTIFY.track(url):
-                                    return
-                                else:
-                                    raise SpotifyException(None, None, None)
-                            except SpotifyException:
-                                pass
+                            if SPOTIFY.track(url):
+                                continue
+                            else:
+                                raise SpotifyException(None, None, None)
                         case 'sp_album':
-                            try:
-                                if SPOTIFY.album_tracks(url):
-                                    return
-                                else:
-                                    raise SpotifyException(None, None, None)
-                            except SpotifyException:
-                                pass
+                            if SPOTIFY.album_tracks(url):
+                                continue
+                            else:
+                                raise SpotifyException(None, None, None)
                         case 'sp_playlist':
-                            try:
-                                if SPOTIFY.playlist_tracks(url):
-                                    return
-                                else:
-                                    raise SpotifyException(None, None, None)
-                            except SpotifyException:
-                                pass
-
-            raise Exception(f'Invalid URL: {url}')
+                            if SPOTIFY.playlist_tracks(url):
+                                continue
+                            else:
+                                raise SpotifyException(None, None, None)
 
 
 if __name__ == '__main__':
     from time import perf_counter
     for data in DATASET:
         curr = perf_counter()
-        Validator.validate(data)
+        Validator.validate('https://open.spotify.com/playlist/2q24Rnws1dMyU7nP9DSouk?si=17e0b77e56d04d88&pt=b6bfccd967f3d2fa1f2a77ec2cf81240')
         print(f'{data} elapsed: {perf_counter() - curr}')

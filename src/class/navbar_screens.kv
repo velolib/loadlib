@@ -1,0 +1,188 @@
+#:include src/class/navbar_widgets.kv
+
+
+<NavBar@MDTopAppBar>
+    size_hint: 1, None
+    height: dp(50)
+    elevation: 4
+    pos_hint: {'top': 1}
+    md_bg_color: app.theme_cls.primary_color
+    specific_text_color: 0, 0, 0, 1
+    left_action_items:
+        [['menu', lambda x: app.root.ids.nav_drawer.set_state('open')]]
+
+<MainScreen>
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        NavBar:
+            title: 'Download'
+
+
+        AnchorLayout:
+            size_hint: 1, 1
+            anchor_x: 'center'
+            anchor_y: 'center'
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(20)
+                spacing: dp(20)
+
+                MDBoxLayout:
+                    id: firstbox
+                    size_hint: 1, 1
+                    spacing: dp(20)
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                    MDAnchorLayout:
+                        anchor_y: 'top'
+                        size_hint: None, 1
+                        width: dp(128)
+
+                        MDCard:
+                            md_bg_color: 1, 1, 1, 0.01
+                            size_hint: None, None
+                            width: dp(128)
+                            height: dp(192)
+                            spacing: dp(10)
+                            padding: dp(10)
+                            orientation: 'vertical'
+                            radius: dp(25)
+
+                            TooltipMDIconButton:
+                                id: download
+                                icon: 'download'
+                                icon_size: dp(48)
+                                theme_icon_color: 'Custom'
+                                icon_color: 0, 0, 0, 1
+                                disabled_color: 0, 0, 0, 1
+
+                                size_hint: None, 0.5
+                                width: self.height
+                                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                                theme_icon_color: 'Custom'
+                                md_bg_color: app.theme_cls.primary_color
+                                md_bg_color_disabled: app.theme_cls.primary_dark
+
+                                disabled: True
+
+                            TooltipMDIconButton:
+                                tooltip_text: root.path
+                                id: folder
+                                icon: 'folder'
+                                icon_size: dp(48)
+                                theme_icon_color: 'Custom'
+                                icon_color: 0, 0, 0, 1
+                                disabled_color: 0, 0, 0, 1
+
+                                size_hint: None, 0.5
+                                width: self.height
+                                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                                theme_icon_color: 'Custom'
+                                md_bg_color: app.theme_cls.primary_color
+                                md_bg_color_disabled: app.theme_cls.primary_dark
+
+                                on_release: root.file_manager_open()
+                                disabled: False
+                    MDCard:
+                        radius: dp(25)
+                        padding: dp(10)
+                        md_bg_color: 1, 1, 1, 0.01
+                        size_hint: 1, 1
+
+                        LinkView:
+                            id: fv
+
+
+
+
+                MDCard:
+                    size_hint: 1, None
+                    height: dp(85)
+                    md_bg_color: 1, 1, 1, 0.01
+                    spacing: dp(25)
+                    padding: dp(10)
+                    radius: dp(25)
+
+                    TooltipMDIconButton:
+                        icon: 'autorenew'
+                        icon_size: dp(48)
+                        theme_icon_color: 'Custom'
+                        icon_color: 0, 0, 0, 1
+                        disabled_color: 0, 0, 0, 1
+
+                        width: self.height
+                        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                        theme_icon_color: 'Custom'
+                        md_bg_color: app.theme_cls.primary_color
+                        md_bg_color_disabled: app.theme_cls.primary_dark
+                        on_press: root.text_reset()
+                        size_hint: None, 1
+                        width: self.height
+                    MDScrollView:
+                        size_hint: 1, 1
+                        do_scroll_x: False
+                        effect_cls: 'ScrollEffect'
+                        LinkBox:
+                            id: fb
+                    TooltipMDIconButton:
+                        icon: 'plus'
+                        icon_size: dp(48)
+                        theme_icon_color: 'Custom'
+                        icon_color: 0, 0, 0, 1
+                        disabled_color: 0, 0, 0, 1
+
+                        width: self.height
+                        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+                        theme_icon_color: 'Custom'
+                        md_bg_color: app.theme_cls.primary_color
+                        md_bg_color_disabled: app.theme_cls.primary_dark
+                        on_press: root.text_button()
+
+                        size_hint: None, 1
+                        width: self.height
+
+<SettingsScreen@MDScreen>
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        NavBar:
+            title: 'Settings'
+        MDScrollView:
+            MDStackLayout:
+                orientation: 'lr-tb'
+                spacing: dp(20)
+                padding: dp(20)
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDCard:
+                    id: max_res
+                    md_bg_color: 1, 1, 1, 0.01
+                    size_hint: 1, None
+                    radius: dp(25)
+                    height: dp(100)
+
+                    padding: dp(20)
+                    spacing: dp(20)
+
+                    MDLabel:
+                        text: 'Maximum resolution to download'
+                        text_color: 1, 1, 1, 1
+                    MDSegmentedControl:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+
+                        MDSegmentedControlItem:
+                            text: "Male"
+
+                        MDSegmentedControlItem:
+                            text: "Female"
+
+                        MDSegmentedControlItem:
+                            text: "All"

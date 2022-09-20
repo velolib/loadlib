@@ -8,27 +8,29 @@ from pytube import YouTube, Playlist  # $ pip install pytube
 from pytube.exceptions import PytubeError  # ^
 import spotipy  # $ pip install spotipy
 from spotipy.oauth2 import SpotifyClientCredentials  # ^
+from spotipy.exceptions import SpotifyException
 from youtube_search import YoutubeSearch  # $ pip install youtube_search
 import ffmpeg  # $ pip install ffmpeg-python
 
 # Vanilla imports
+import asyncio as asy
 import subprocess  # ffmpeg
 import glob  # temp removal
 import pathlib as ptl  # pathlib utils (no os path join)
 import os  # os
 import requests as rq  # request cover art
 from time import perf_counter  # performance logging
-from typing import Callable  # type hints
+from typing import Literal  # type hints
 
 # Local imports
 try:  # run from root
-    from src.consts import LOADLIB, ALLOWED, config_get, LOADLONG  # constants
+    from src.consts import LOADLIB, ALLOWED, CFG, LOADLONG  # constants
     from src.logs import Jou  # logs
 except ImportError:  # run from main
-    from consts import LOADLIB, ALLOWED, config_get, LOADLONG  # constants
+    from consts import LOADLIB, ALLOWED, CFG, LOADLONG  # constants
     from logs import Jou  # logs
 
-AUTH_MANAGER = SpotifyClientCredentials('36890a0a09594f38894f8d2f48bfc087', config_get(['spotify_secret']))
+AUTH_MANAGER = SpotifyClientCredentials(CFG.load(CFG.path)['sp_appid'], CFG.load(CFG.path)['sp_secret'])
 SPOTIFY = spotipy.Spotify(auth_manager=AUTH_MANAGER)
 
 tempo = ptl.Path(LOADLIB / '.tmp')
@@ -85,7 +87,7 @@ class Downloader():
             string = string.replace(bacteria, sanitizer)
         return string
 
-    def start(self, *urls: str, out: str, callme: Callable | None = None):
+    def start(self, *urls: str, out: str):
         """Identifies the inputted URLS as inputs for the processing functions
 
         Args:
@@ -136,9 +138,6 @@ class Downloader():
             worker.join()
 
         Jou.info('%s Queue has been processed in %s seconds' % (LOADLONG, (perf_counter() - start),))
-
-        if callme:
-            callme()
 
     @classmethod
     def sp_album(cls, out: str, playlist: str, queue, *args):
@@ -212,9 +211,14 @@ class Downloader():
 
             # Search youtube for song
             Jou.info('%s Loaded song with metadata %s' % (LOADLONG, metadata,))
-            query = YoutubeSearch(f'{metadata["artists"][0]} - {metadata["track_name"]}').to_dict()
-            Jou.info('%s Found spotify -> YouTube ID %s' % (LOADLONG, query[0]['id']))  # type: ignore
-            url = 'https://youtu.be/' + query[0]['id']  # type: ignore
+            query = YoutubeSearch(f'{metadata["artists"][0]} - {metadata["track_name"]} {metadata["album"]}', 3).to_dict()
+
+            # Filter: Length
+            length_dict = {YouTube(('https://youtu.be/' + x['id'])).length: x['id'] for x in query}  # type: ignore
+            sv_id = length_dict[(min(length_dict, key=lambda x:abs(x-(track['duration_ms'] // 1000))))]  # type: ignore
+
+            Jou.info('%s Found spotify -> YouTube ID %s' % (LOADLONG, sv_id))  # type: ignore
+            url = 'https://youtu.be/' + sv_id  # type: ignore
             Jou.info('%s Downloading song %s' % (LOADLONG, metadata['track_name'],))
             cls.yt_video(str(tempo), url, name=pid, sp=True)
             Jou.info('%s Finished downloading song %s' % (LOADLONG, metadata['track_name'],))
@@ -288,7 +292,7 @@ class Downloader():
         Jou.info('%s Added yt_playlist %s to queue' % (LOADLONG, pl.title,))
 
     @classmethod
-    def yt_video(cls, out: str, url: str, *args, name: str = '', sp: bool =False):
+    def yt_video(cls, out: str, url: str, *args, name: str = '', sp: bool = False):
         """Processes youtube videos into .webm
 
         Args:
@@ -348,14 +352,53 @@ class Downloader():
                 os.remove(str(ptl.Path(tempo / (pid + '_aud')).with_suffix('.mp4')))
 
 
+def get_title(url, type: Literal['yt', 'sp']):
+    match type:
+        case 'yt':
+            try:
+                yt = YouTube(url)
+                if yt:
+                    return yt.title
+                else:
+                    raise PytubeError
+            except PytubeError:
+                return Playlist(url).title
+        case 'sp':
+            try:
+                sp = SPOTIFY.track(url)
+                if sp:
+                    title = sp['name'].replace("'", "").replace('"', "")
+                    artist = [v['name'].replace("'", "").replace('"', "") for v in sp['artists']][0]
+                    return f'{title} - {artist}'
+                else:
+                    raise SpotifyException(None, None, None)
+            except SpotifyException:
+                try:
+                    sp = SPOTIFY.album(url)
+                    if sp:
+                        return f'{sp["artists"][0]["name"]} - {sp["name"]}'
+                    raise SpotifyException(None, None, None)
+                except SpotifyException:
+                    try:
+                        sp = SPOTIFY.playlist(url)
+                        if sp:
+                            return sp['name']
+                        else:
+                            raise SpotifyException(None, None, None)
+                    except SpotifyException:
+                        return None
+
+
 Downloader_inst = Downloader()
 
 
 if __name__ == '__main__':
     dataset = (
         'https://www.youtube.com/watch?v=-zsV0_QrfTw',
+        'https://www.youtube.com/playlist?list=PLiIiNXduj3VCT5H6Y8Ks2gCLUx0ZlG8Cj',
         'https://open.spotify.com/track/4cIPLtg1avt2Jm3ne9S1zy?si=1ee47f420aaf4ae1',
     )
     download = Downloader()
-    download.start(*dataset, out='D:/Downloads')
+    download.start('https://open.spotify.com/track/7DJOx5DO5MAAuy589sAXCg?si=4ef76442feed417d', out='D:/Downloads')
+
     sleep(1000)

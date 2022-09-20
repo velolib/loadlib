@@ -5,7 +5,8 @@ except ImportError:  # run from main
     from logs import Jou
 import os
 import pathlib as ptl
-import yaml
+import sys
+import ruamel.yaml as rym
 from functools import reduce
 from operator import getitem
 
@@ -33,39 +34,33 @@ DATASET_STR = '''
     https://open.spotify.com/album/2d2QJv4OPOLS80tXaTCDsB?si=dLhjUHgWQL-p3MowXQiXJw
 '''
 
-CONSTS = ptl.Path(__file__).resolve()
-LOADLIB = CONSTS.parents[1]
-PTL_LOADLIB = ptl.Path(LOADLIB)
-os.chdir(LOADLIB)
-CONFIG_PATH = (PTL_LOADLIB / 'config').with_suffix('.yaml')
-STANDARD_CONFIG = {
-    'spotify_secret': '',
-    'settings':
-        {
-            'mode': 'dark',
-        }
-}
+CONSTS = ptl.Path(__file__).resolve()  # consts path
+LOADLIB = CONSTS.parents[1]  # loadlib root path
+os.chdir(LOADLIB)  # cwd
 LOADLONG = '[Loadlib     ]'
 
-if not os.path.exists(CONFIG_PATH):
-    with io.open(CONFIG_PATH, 'w', encoding='UTF-8') as ymfile:
-        Jou.info('%s')
-        yaml.dump(STANDARD_CONFIG, ymfile, default_flow_style=False,
-                  allow_unicode=True, sort_keys=False)
 
-with open(CONFIG_PATH, encoding='UTF-8') as config:
-    CONFIG_DATA = yaml.safe_load(config)
+# config
+
+CFG_PATH = (LOADLIB / 'config').with_suffix('.yaml')
 
 
-def config_get(key_path: list[str] | None = None) -> str:
-    """Reads the config.yaml file and returns the value from the path
+class Yaml(rym.YAML):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-    Args:
-        key_path (list[str]): Dictionary key sequence, ex: ['settings', 'mode']
+        self.path = CFG_PATH
 
-    Returns:
-        str: Value of the specified key
-    """
-    if key_path:
-        return reduce(getitem, key_path, CONFIG_DATA)
-    return CONFIG_DATA
+        if not self.path.exists():
+            with open(self.path, mode='x', encoding='UTF-8') as file:
+                default = {
+                    'sp_appid': '',
+                    'sp_secret': '',
+                    'settings': {
+                        'max_res': ''
+                    }
+                }
+                self.dump(default, self.path)
+
+
+CFG = Yaml(typ='rt')

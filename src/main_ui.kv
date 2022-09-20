@@ -1,0 +1,134 @@
+#:include src/class/navbar_screens.kv
+
+<TooltipMDIconButton@MDIconButton+MDTooltip>
+    tooltip_text_color: 1, 1, 1, 1
+    tooltip_bg_color: 0.25, 0.25, 0.25, 1
+
+<LoadingScreen>
+    name: 'loading'
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: None, None
+        size: dp(400), dp(192)
+        MDSpinner:
+            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+            id: spin
+            size_hint: None, None
+            size: dp(160), dp(160)
+            active: True
+        MDLabel:
+            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+            id: fun
+            text: 'Sonar'
+            text_style: 'Caption'
+            size_hint: None, None
+            size: dp(400), dp(128)
+            valign: 'top'
+            halign: 'center'
+
+<WelcomeScreen>
+    MDBoxLayout:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: None, None
+        size: 400, 300
+        orientation: 'vertical'
+        MDLabel:
+            id: loadlib
+            text: 'LoadLib'
+            halign: 'center'
+            font_style: 'H1'
+
+            size_hint: 1, None
+            height: dp(100)
+        MDLabel:
+            id: created
+            text: 'created by velo'
+            halign: 'center'
+            font_style: 'H5'
+
+            size_hint: 1, None
+            height: dp(150)
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    md_bg_color: 1, 1, 1, 0
+    focus_color: app.theme_cls.primary_color
+    text_color: app.theme_cls.primary_dark
+    icon_color: app.theme_cls.primary_dark
+    selected_color: app.theme_cls.accent_color
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    md_bg_color: 1, 1, 1, 0
+    text_color: app.theme_cls.primary_dark
+    icon_color: app.theme_cls.primary_dark
+    focus_behavior: False
+    selected_color: app.theme_cls.accent_color
+    _no_ripple_effect: True
+
+<RootScreenManager>:
+    id: root_screen_manager
+
+    WelcomeScreen:
+        id: welcome
+        name: 'welcome'
+
+    MDScreen:
+        name: 'root_screen'
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+                id: screen_manager
+
+                MainScreen:
+                    id: main_screen
+                    name: 'download'
+                    path: ''
+                SettingsScreen:
+                    id: settings_screen
+                    name: 'settings'
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                md_bg_color: 0.1, 0.1, 0.1, 1
+                radius: (dp(0), dp(16), dp(16), dp(0))
+
+                MDNavigationDrawerMenu:
+                    MDNavigationDrawerHeader:
+                        title: 'Menu'
+                        spacing: dp(4)
+                        padding: dp(12), 0, 0, dp(18)
+                    MDNavigationDrawerDivider:
+
+                    DrawerClickableItem:
+                        icon: 'download'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Download'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release:
+                            root.ids.screen_manager.transition.direction = 'left'
+                            root.ids.nav_drawer.set_state('close')
+                            root.ids.screen_manager.current = 'download'
+                    DrawerClickableItem:
+                        icon: 'cog'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Settings'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release:
+                            root.ids.screen_manager.transition.direction = 'left'
+                            root.ids.nav_drawer.set_state('close')
+                            root.ids.screen_manager.current = 'settings'
+                    DrawerClickableItem:
+                        icon: 'information-outline'
+                        icon_color: 1, 1, 1, 1
+                        text: 'Acknowledgements'
+                        text_color: 1, 1, 1, 1
+                        selected_color: 1, 1, 1, 1
+                        on_release:
+                            root.ids.screen_manager.transition.direction = 'left'
+                            root.ids.nav_drawer.set_state('close')
+                            root.ids.screen_manager.current = 'download'
+    LoadingScreen:
