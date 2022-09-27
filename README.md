@@ -1,1 +1,1 @@
-Fun personal project to make a kivy wrapper for some python libraries
+Fun personal project to make a kivy wrapper for some python media download libraries
