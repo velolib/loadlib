@@ -1,0 +1,359 @@
+
+
+<Item>
+    ripple_scale: 0
+    ImageLeftWidget:
+        source: root.source
+
+<DownloadScreen>
+    MDBoxLayout:
+        padding: dp(20)
+        spacing: dp(20)
+        orientation: 'vertical'
+        MDCard:
+            size_hint: 1, 1
+            radius: dp(30)
+            padding: dp(20)
+            spacing: dp(20)
+            md_bg_color: app.bg_darker
+            LinkView:
+                id: lv
+
+        MDCard:
+            size_hint: 1, None
+            height: dp(192)
+            radius: dp(30)
+            padding: dp(20)
+            spacing: dp(20)
+            md_bg_color: app.bg_darker
+
+            MDBoxLayout:
+                spacing: dp(10)
+                size_hint: None, 1
+                width: self.minimum_width
+                orientation: 'vertical'
+                MDIconButton:
+                    id: down
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                    size_hint: None, None
+
+                    md_bg_color: app.theme_cls.primary_color
+                    icon: 'download'
+                    icon_size: dp(48)
+                    theme_icon_color: 'Custom'
+                    icon_color: app.theme_cls.bg_darkest
+                    on_release: root.start_download()
+
+                    disabled: True
+
+                    disabled_color: app.theme_cls.bg_dark
+                    md_bg_color_disabled: app.theme_cls.primary_dark
+
+                MDIconButton:
+                    id: folder
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                    size_hint: None, None
+
+                    md_bg_color: app.theme_cls.primary_color
+                    icon: 'folder'
+                    icon_size: dp(48)
+                    theme_icon_color: 'Custom'
+                    icon_color: app.theme_cls.bg_darkest
+                    on_release: root.sel_dir()
+
+            MDFloatLayout:
+                ScrollView:
+                    id: scrlv
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                    MDTextField:
+                        id: tf
+                        mode: 'fill'
+                        size_hint: 1, None
+                        multiline: True
+                        helper_text_mode: 'on_error'
+                        height: max(self.minimum_height, root.ids.scrlv.height)
+                MDSpinner:
+                    id: spin
+                    size_hint: None, None
+                    size: dp(64), dp(64)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    active: False
+
+            MDBoxLayout:
+                spacing: dp(10)
+                size_hint: None, 1
+                width: self.minimum_width
+                orientation: 'vertical'
+                MDIconButton:
+                    id: reset
+                    pos_hint: {'center_x': 0.5,'center_y': 0.0}
+                    size_hint: None, None
+
+                    md_bg_color: app.theme_cls.primary_color
+                    icon: 'cached'
+                    icon_size: dp(48)
+                    theme_icon_color: 'Custom'
+                    icon_color: app.theme_cls.bg_darkest
+                    on_release: root.clear_links()
+
+                MDIconButton:
+                    id: add
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                    size_hint: None, None
+
+                    md_bg_color: app.theme_cls.primary_color
+                    icon: 'plus'
+                    icon_size: dp(48)
+                    theme_icon_color: 'Custom'
+                    icon_color: app.theme_cls.bg_darkest
+                    on_release: root.add_links()
+
+                    md_bg_color_disabled: app.theme_cls.primary_color
+                    disabled_color: self.icon_color
+                    rounded_button: True
+
+
+<LinkView>
+    viewclass: 'LinkCell'
+    scroll_type: ['bars']
+    RecycleBoxLayout:
+        id: rbl
+        spacing: dp(10)
+        padding: dp(10)
+        default_size: None, None
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+<LinkCell>
+    size_hint: 1, None
+    height: max(self.minimum_height, self.ids.label.height)
+
+    md_bg_color: app.theme_cls.primary_color
+    radius: dp(25)
+    padding: dp(15)
+    spacing: dp(20)
+    orientation: 'horizontal'
+    AsyncImage:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        source: root.logo
+        size_hint: None, None
+        size: dp(36), dp(36)
+
+    MDLabel:
+        id: label
+        text: root.title
+        theme_text_color: 'Custom'
+        text_color: 0, 0, 0, 1
+        font_style: 'H6'
+        halign: 'left'
+
+    MDFloatLayout:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: None, 1
+        width: self.height
+
+        MDIconButton:
+            id: del
+            icon: 'close'
+
+            size_hint: None, 1
+            width: self.height
+
+            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+            md_bg_color: 0, 0, 0, 1
+            icon_color: app.theme_cls.primary_color
+            theme_icon_color: 'Custom'
+            ripple_alpha: 0
+
+<SettingsCard@MDCard>
+    md_bg_color: app.card_color
+    size_hint: 1, None
+    radius: dp(25)
+    height: dp(100)
+
+    padding: dp(20)
+    spacing: dp(20)
+
+<SettingsScreen>
+    MDScrollView:
+        scroll_type: ['bars']
+        MDStackLayout:
+            orientation: 'lr-tb'
+            spacing: dp(20)
+            padding: dp(20)
+            size_hint_y: None
+            height: self.minimum_height
+
+            SettingsCard:
+
+                MDLabel:
+                    text: 'Maximum video resolution'
+                    font_style: 'H6'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, 1
+
+                MDAnchorLayout:
+
+                    ConfigDropdown:
+                        id: drop_item
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        key_path: ['settings', 'max_res']
+
+            SettingsCard:
+
+                MDLabel:
+                    text: 'Number of threads to run'
+                    font_style: 'H6'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, 1
+
+                MDAnchorLayout:
+
+                    ConfigSlider:
+                        hint: True
+                        max: 5
+                        min: 1
+                        show_off: False
+                        key_path: ['settings', 'threads']
+
+            SettingsCard:
+
+                MDLabel:
+                    text: 'Spotify Developer Application ID'
+                    font_style: 'H6'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, 1
+
+                MDAnchorLayout:
+
+                    ConfigTextField:
+                        size_hint: 1, None
+                        helper_text_mode: 'on_error'
+                        key_path: ('settings', 'sp_appid')
+                        max_length: 40
+
+            SettingsCard:
+
+                MDLabel:
+                    text: 'Spotify Developer Application Secret'
+                    font_style: 'H6'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, 1
+
+                MDAnchorLayout:
+
+                    ConfigTextField:
+                        size_hint: 1, None
+                        helper_text_mode: 'on_error'
+                        key_path: ('settings', 'sp_secret')
+                        max_length: 40
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                spacing: dp(20)
+                MDRoundFlatButton:
+                    size_hint: 1, 1
+                    text: 'reset settings'
+                    font_style: 'Button'
+                    font_size: sp(17)
+                    on_release: root.reset_config()
+                MDRoundFlatButton:
+                    size_hint: 1, 1
+                    text: 'open log folder'
+                    font_style: 'Button'
+                    font_size: sp(17)
+                    on_release: root.open_log()
+
+
+
+
+
+
+
+
+<RootScreen@MDScreen>
+    MDBoxLayout:
+        #:import SlideTransition kivy.uix.screenmanager.SlideTransition
+
+        MDBottomNavigation:
+            id: nav
+            panel_color: app.bg_darker
+            size_hint: 1, 1
+            use_text: False
+            selected_color_background: app.theme_cls.bg_dark
+            transition: SlideTransition
+            MDBottomNavigationItem:
+                name: 'screen 1'
+                text: 'Download'
+                icon: 'download'
+
+                DownloadScreen:
+
+            MDBottomNavigationItem:
+                name: 'screen 3'
+                text: 'Settings'
+                icon: 'cog'
+
+                SettingsScreen:
+
+<WelcomeScreen@MDScreen>
+    on_touch_down:
+        self.manager.transition.direction = 'up'
+        self.manager.current = 'mainroot'
+
+    MDBoxLayout:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: None, None
+        size: 400, 300
+        orientation: 'vertical'
+        MDLabel:
+            id: loadlib
+            text: 'LoadLib'
+            halign: 'center'
+            font_style: 'H1'
+
+            size_hint: 1, None
+            height: dp(100)
+        MDLabel:
+            id: created
+            text: 'created by velo'
+            halign: 'center'
+            font_style: 'H5'
+
+            size_hint: 1, None
+            height: dp(150)
+
+<LoadingScreen>
+    MDBoxLayout:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: None, None
+        size: dp(400), dp(160)
+        orientation: 'vertical'
+        spacing: dp(40)
+        MDProgressBar:
+            id: prog
+            value: 0
+        MDLabel:
+            text: root.progress_text
+            font_style: 'H6'
+            valign: 'top'
+            halign: 'center'
+
+<RSM>:
+    id: rsm
+    WelcomeScreen:
+        id: welcome
+        name: 'welcome'
+
+    RootScreen:
+        id: mainroot
+        name: 'mainroot'
+
+    LoadingScreen:
+        id: loading
+        name: 'loading'

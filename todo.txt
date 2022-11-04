@@ -1,0 +1,8 @@
+todo:
+
+cleanup download module
+settings:
+- total download maximum timeout
+- per-file download maximum timeout
+- CPU core limit (process limit)
+< 1 GB disk space notification

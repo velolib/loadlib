@@ -13,10 +13,10 @@
       "justMyCode": true
     },
     {
-      "name": "Python: Run Application",
+      "name": "Python: Start UI",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/loadlib.py",
+      "program": "${workspaceFolder}/src/loadlib/main.py",
       "console": "integratedTerminal",
       "justMyCode": true
     }
