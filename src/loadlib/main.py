@@ -19,7 +19,10 @@ if current_process().name == 'MainProcess':  # TODO: Find out if this is necessa
     from loguru import logger
 
     from loadlib.const import LOADLIB
+    if not LOADLIB.exists():
+        LOADLIB.mkdir()
     from loadlib.ui.ui import UIApp
+    import loadlib.config
 
     logger.remove()
     logger.add(stderr, level='INFO')
