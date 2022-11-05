@@ -342,7 +342,7 @@ class RSM(MDScreenManager):
 
 class UIApp(MDApp):
     bg_darker = ColorProperty()
-    icon = 'assets/loadlib.png'
+    icon = './assets/loadlib.png'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
