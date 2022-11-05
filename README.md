@@ -5,6 +5,7 @@ Loadlib is a python GUI application made using kivy to download media from websi
 ## Installation
 1. Download the latest [Loadlib release](https://github.com/velolib/loadlib/releases) for your specified OS
 2. Run the executable to start the installation
+3. Click 'run anyway' if prompted
 
 ### Supported sites
 - YouTube
