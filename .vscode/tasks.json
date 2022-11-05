@@ -4,7 +4,7 @@
         {
             "label": "build pyinstaller",
             "type": "shell",
-            "command": "${command:python.interpreterPath} -m PyInstaller loadlib.spec --noconfirm",
+            "command": "${command:python.interpreterPath} -m PyInstaller loadlib.spec --noconfirm --clean",
             "group": {
                 "kind": "build",
                 "isDefault": true
