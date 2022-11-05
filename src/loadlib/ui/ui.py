@@ -11,7 +11,6 @@ multiprocessing.freeze_support()
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Thread
 from time import perf_counter
-from spotipy import SpotifyClientCredentials, SpotifyException
 from kivy import Config
 import pathlib as ptl
 import os
@@ -31,9 +30,9 @@ from kivymd.toast import toast
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
+from kivy.core.window import Window
 from loadlib.config import YAML
 from loadlib.const import LOADLIB, Resolutions
 from loadlib.downloader.download import DownloadReturn
@@ -41,13 +40,22 @@ from loadlib.exceptions import DownloaderException
 from loadlib.ui.components import widgets
 from loadlib.utils import get_duplicates
 from loguru import logger
-from pytube.exceptions import PytubeError
 
 Loader.loading_image = Loader.image('./assets/loading.png')
 
 
 def download_runner(func):
     return func()
+
+
+class WelcomeScreen(MDScreen):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        Window.bind(on_key_up=self.close_this)
+
+    def close_this(self, *args, **kwargs):
+        self.manager.transition.direction = 'up'
+        self.manager.current = 'mainroot'
 
 
 class SettingsScreen(MDScreen):
@@ -334,6 +342,7 @@ class RSM(MDScreenManager):
 
 class UIApp(MDApp):
     bg_darker = ColorProperty()
+    icon = 'assets/loadlib.png'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -301,32 +301,38 @@
 
                 SettingsScreen:
 
-<WelcomeScreen@MDScreen>
+<WelcomeScreen>
     on_touch_down:
         self.manager.transition.direction = 'up'
         self.manager.current = 'mainroot'
 
-    MDBoxLayout:
+    MDAnchorLayout:
         pos_hint: {'center_x': 0.5,'center_y': 0.5}
         size_hint: None, None
-        size: 400, 300
-        orientation: 'vertical'
-        MDLabel:
-            id: loadlib
-            text: 'LoadLib'
-            halign: 'center'
-            font_style: 'H1'
-
-            size_hint: 1, None
+        size: 800, 600
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: None, None
+            width: self.minimum_width
             height: dp(100)
-        MDLabel:
-            id: created
-            text: 'created by velo'
-            halign: 'center'
-            font_style: 'H5'
+            Image:
+                source: './assets/loadlib.png'
+                size_hint: None, 1
+            Image:
+                source: './assets/loadlib_txt.png'
+                size_hint: None, 1
+                width: dp(360)
+        MDRelativeLayout:
+            size_hint: 1, 1
+            MDLabel:
+                pos_hint: {'center_x': 0.5,'center_y': 0.4}
+                id: created
+                text: 'by velo'
+                halign: 'center'
+                font_style: 'H6'
 
-            size_hint: 1, None
-            height: dp(150)
+                size_hint: 1, None
+                height: dp(150)
 
 <LoadingScreen>
     MDBoxLayout:

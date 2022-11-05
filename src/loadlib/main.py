@@ -31,15 +31,14 @@ if current_process().name == 'MainProcess':  # TODO: Find out if this is necessa
     if not LOADLIB.exists():
         LOADLIB.mkdir()
 
-    def rmtree(root: ptl.Path):
-        for p in root.iterdir():
-            if p.is_dir():
-                rmtree(p)
-            else:
-                p.unlink()
-        root.rmdir()
-
     try:
+        def rmtree(root: ptl.Path):
+            for p in root.iterdir():
+                if p.is_dir():
+                    rmtree(p)
+                else:
+                    p.unlink()
+            root.rmdir()
         ll_temp = ptl.Path(tempfile.gettempdir()).glob('ll_*/')
         for tempo in ll_temp:
             rmtree(tempo)

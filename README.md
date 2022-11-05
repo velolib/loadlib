@@ -1,19 +1,14 @@
-Fun personal project to make a kivy wrapper to download media.
+# Loadlib [1.0.0](https://github.com/velolib/loadlib/releases)
+<img align="right" height="256" src="https://github.com/kivymd/internal/raw/main/logo/kivymd_logo_blue.png"/>
+Loadlib is a python GUI application made using kivy to download media from websites.
 
-### Supported Sites
-- YouTube\
-Size limit of 1 GB, no downloading of livestreams
+## Installation
+1. Download the latest [Loadlib release](https://github.com/velolib/loadlib/releases) for your specified OS
+2. Run the executable to start the installation
+
+### Supported sites
+- YouTube
 - Spotify\
-Requires developer application, imperfect search algorithm and embeds metadata
-- Any site that asks to download\
-Requires Content-Disposition header, may or may not support Discord!
-
-### Planned Support
-- Twitter\
-Download videos and images in a tweet. Would support tweets with multiple embedded media
-- Image links\
-Download image files, [Example](https://www.digminecraft.com/images/3x3_crafting_area.png)
-- Instagram\
-Download images, videos, and reels
-- TikTok\
-Last priority. Needs more research
+Requires application credentials
+- Other sites\
+Will download file if points to a file. Else will download HTML
