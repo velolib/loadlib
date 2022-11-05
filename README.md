@@ -1,5 +1,5 @@
 # Loadlib [1.0.0](https://github.com/velolib/loadlib/releases)
-<img align="right" height="256" src="https://github.com/kivymd/internal/raw/main/logo/kivymd_logo_blue.png"/>
+<img align="right" height="256" src="https://raw.githubusercontent.com/velolib/loadlib/main/assets/loadlib.png"/>
 Loadlib is a python GUI application made using kivy to download media from websites.
 
 ## Installation
